@@ -5,6 +5,36 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.1.4] - 2025-06-14
+
+### 🚀 Final Production Release
+
+#### ✨ Complete Integration
+- **Fully Tested**: All improvements from example-counter integrated and tested
+- **Pure Function Support**: Complete support for functions with return values
+- **Clean UI**: Polished menu display without unnecessary labels
+- **Production Ready**: All features working seamlessly
+
+#### 🔧 What's New
+- **Enhanced Function Detection**: Detects both `ImpureCircuits` and `PureCircuits`
+- **Smart Type Analysis**: Functions classified by return types and patterns
+- **Improved Auto-Generator**: Clean, production-ready code generation
+- **Better UX**: Streamlined CLI interface
+
+## [2.1.3] - 2025-06-14
+
+### 🎯 Production-Ready Integration
+
+#### ✨ Added
+- **Complete Integration**: Fully integrated all working improvements from example-counter
+- **Tested Functionality**: All features tested and verified to work correctly
+- **Clean Implementation**: Removed debug logs and polished user experience
+
+#### 🔧 Updated
+- **Latest Improvements**: All template files updated with the most recent enhancements
+- **API Enhancements**: Updated API files with latest functionality
+- **Generator Improvements**: Auto-generator refined for production use
+
 ## [2.1.2] - 2025-06-14
 
 ### 🚀 Enhanced Function Detection & UI Improvements

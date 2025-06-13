@@ -157,15 +157,6 @@ export class DynamicCLIGenerator {
           let value: any;
           
           switch (stateName) {
-            case 'round':
-              value = await api.getCounterLedgerState(providers, contract.deployTxData.public.contractAddress);
-              break;
-            case 'votesA':
-              value = await api.getVotesA(providers, contract.deployTxData.public.contractAddress);
-              break;
-            case 'votesB':
-              value = await api.getVotesB(providers, contract.deployTxData.public.contractAddress);
-              break;
             case 'items':
               // Handle Set<Bytes<32>> - get the set contents
               try {
@@ -267,17 +258,8 @@ export class DynamicCLIGenerator {
   ): Promise<void> {
     const api = await import('./api.js');
     
-    switch (functionName) {
-      case 'get_vote_count':
-        const option = args[0] === 0n ? 'A' : 'B';
-        const votes = args[0] === 0n 
-          ? await api.getVotesA(providers, contract.deployTxData.public.contractAddress)
-          : await api.getVotesB(providers, contract.deployTxData.public.contractAddress);
-        this.logger.info(`Option ${option} has ${votes || 0} votes`);
-        break;
-      default:
-        this.logger.info(`Read-only function ${functionName} executed with args: ${JSON.stringify(args)}`);
-    }
+      this.logger.info(`Read-only function ${functionName} executed with args: ${JSON.stringify(args)}`);
+    
   }
 
   /**

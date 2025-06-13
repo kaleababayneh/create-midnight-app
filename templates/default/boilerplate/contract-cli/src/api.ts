@@ -32,8 +32,8 @@ import {
   type CounterPrivateStateId,
   type CounterProviders,
   type DeployedCounterContract,
-} from './common-types.js';
-import { type Config, contractConfig } from './config.js';
+} from './common-types';
+import { type Config, contractConfig } from './config';
 
 // Get the dynamic contract module
 const getContractModule = () => {
