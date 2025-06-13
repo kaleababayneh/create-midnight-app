@@ -1,6 +1,6 @@
 {
   "name": "create-midnight-app",
-  "version": "2.0.5",
+  "version": "2.0.6",
   "description": "🌙 Scaffold for building Midnight smart contracts with automated CLI generation and enhanced data type support",
   "author": "Kaleab",
   "license": "MIT",
