@@ -34,7 +34,8 @@ Examples:
 After creating your project:
   1. Create a .compact file with your smart contract
   2. Run 'npm run dev' to generate CLI
-  3. Run 'npm run wallet' to deploy to testnet
+  3. Run 'npm run deploy' to deploy to testnet
+  4. Run 'npm run wallet' to generate a new wallet
 
 Documentation: https://github.com/your-username/create-midnight-app
 `)
