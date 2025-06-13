@@ -263,9 +263,7 @@ class CompactCLIAutoGenerator {
         returns: match[4].split(',').map(s => s.trim()).filter(Boolean),
       });
     }
-    if (witnesses.length === 0) {
-      console.log('No witnesses matched. Buffer was:', buffer);
-    }
+    // Remove debug log - witnesses parsing is working fine
     return witnesses;
   }
 

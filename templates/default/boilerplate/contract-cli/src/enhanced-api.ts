@@ -1,6 +1,6 @@
-// Enhanced API wrapper for Bboard Contract
-// Generated on: 2025-06-13T09:24:43.078Z
-// Auto-generated from bboard.compact
+// Enhanced API wrapper for Counter Contract
+// Generated on: 2025-06-13T20:26:30.666Z
+// Auto-generated from counter.compact
 
 import { type Logger } from 'pino';
 import { ContractAnalyzer } from './contract-analyzer.js';
@@ -92,37 +92,68 @@ export class EnhancedContractAPI {
   async increment(...args: any[]): Promise<any> {
     return await (originalApi as any).increment(...args);
   }
+  /**
+   * Execute decrement function
+   */
+  async decrement(...args: any[]): Promise<any> {
+    return await (originalApi as any).decrement(...args);
+  }
+  /**
+   * Execute publicKey function
+   */
+  async publicKey(...args: any[]): Promise<any> {
+    return await (originalApi as any).publicKey(...args);
+  }
 }
 
 // Export contract metadata for reference
 export const CONTRACT_METADATA = {
-  name: 'Bboard Contract',
-  fileName: 'bboard.compact',
-  generatedAt: '2025-06-13T09:24:43.078Z',
+  name: 'Counter Contract',
+  fileName: 'counter.compact',
+  generatedAt: '2025-06-13T20:26:30.666Z',
   functions: [
   {
     "name": "increment",
     "parameters": [],
     "returnType": "[]",
     "readOnly": false
+  },
+  {
+    "name": "decrement",
+    "parameters": [
+      {
+        "name": "sk",
+        "type": "Bytes<32>"
+      }
+    ],
+    "returnType": "[]",
+    "readOnly": false
+  },
+  {
+    "name": "publicKey",
+    "parameters": [
+      {
+        "name": "sk",
+        "type": "Bytes<32>"
+      }
+    ],
+    "returnType": "Bytes<32>",
+    "readOnly": true
   }
 ],
   ledgerState: [
+  {
+    "name": "organizer",
+    "type": "Bytes<32>"
+  },
+  {
+    "name": "restrictedCounter",
+    "type": "Counter"
+  },
   {
     "name": "round",
     "type": "Counter"
   }
 ],
-  witnesses: [
-  {
-    "name": "local_secret_key",
-    "ledgerType": "typeof Ledger",
-    "privateType": "BBoardPrivateState",
-    "returns": [
-      "// EXERCISE 2: WHAT ARE THE CORRECT TWO VALUES TO RETURN HERE?\n    privateState",
-      "// EXERCISE ANSWER\n    privateState.secretKey",
-      "// EXERCISE ANSWER"
-    ]
-  }
-]
+  witnesses: []
 } as const;

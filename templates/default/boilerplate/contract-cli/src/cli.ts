@@ -50,7 +50,7 @@ const deployOrJoin = async (providers: CounterProviders, rli: Interface): Promis
       return await api.joinContract(providers, contractAddress);
     } else {
       logger.info('🚀 Auto-deploying new contract...');
-      return await api.deploy(providers, { privateCounter: 0 });
+      return await api.deploy(providers, { secretKey: new Uint8Array(32).fill(1) });
     }
   }
   
@@ -58,7 +58,7 @@ const deployOrJoin = async (providers: CounterProviders, rli: Interface): Promis
     const choice = await rli.question(DEPLOY_OR_JOIN_QUESTION);
     switch (choice) {
       case '1':
-        return await api.deploy(providers, { privateCounter: 0 });
+        return await api.deploy(providers, { secretKey: new Uint8Array(32).fill(1) });
       case '2':
         return await join(providers, rli);
       case '3':

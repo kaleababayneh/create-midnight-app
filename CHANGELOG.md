@@ -5,6 +5,50 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.1.2] - 2025-06-14
+
+### 🚀 Enhanced Function Detection & UI Improvements
+
+#### ✨ Added
+- **Pure Function Support**: Now detects and displays pure functions (read-only functions with return values)
+- **Improved Parsing**: Enhanced contract analyzer to parse both `ImpureCircuits` and `PureCircuits` types
+- **Better Return Type Detection**: Functions with return values are automatically marked as read-only
+
+#### 🎨 Improved
+- **Cleaner UI**: Removed "(read-only)" labels from regular contract functions in CLI menu
+- **Reduced Noise**: Removed debug logging for witness parsing
+
+#### 🔧 Fixed
+- **Missing Functions**: Fixed issue where functions with return values weren't appearing in CLI menus
+- **Type Analysis**: Improved function classification based on return types, not just naming patterns
+
+## [2.1.0] - 2025-06-13
+
+### 🎯 Dynamic Type Detection & Automatic Import Generation
+
+This release introduces intelligent contract analysis with dynamic type detection, eliminating the need for manual type configuration when switching between different contract types.
+
+### ✨ Added
+
+#### Dynamic Type System
+- **Auto-Detection**: Automatically detects private state types from contract witnesses
+- **Dynamic Imports**: Generates clean `common-types.ts` with correct imports for any contract
+- **Generic Support**: Works seamlessly with any contract type (Counter, BBoard, Voting, etc.)
+- **Smart Mapping**: Comprehensive type mapping that handles various naming patterns
+- **Zero Configuration**: No manual intervention needed when switching contract types
+
+#### Improved Auto-Generator
+- **Enhanced Type Analysis**: Reads witness functions to determine correct private state structure
+- **Comprehensive Updates**: Updates all CLI files with contract-specific types automatically
+- **Error Prevention**: Eliminates type mismatch errors when changing contracts
+- **Better Feedback**: Clear console output showing type detection and updates
+
+### 🔧 Improved
+- Auto-generator now works universally with any contract type
+- Enhanced error handling for type detection
+- Better console output and debugging information
+- More robust contract analysis and parsing
+
 ## [2.0.0] - 2025-06-13
 
 ### 🚀 Major Release - Enhanced Data Type Support & Professional Tooling

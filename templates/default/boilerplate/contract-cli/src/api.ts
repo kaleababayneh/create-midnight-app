@@ -32,8 +32,8 @@ import {
   type CounterPrivateStateId,
   type CounterProviders,
   type DeployedCounterContract,
-} from './common-types';
-import { type Config, contractConfig } from './config';
+} from './common-types.js';
+import { type Config, contractConfig } from './config.js';
 
 // Get the dynamic contract module
 const getContractModule = () => {
@@ -77,43 +77,8 @@ export const getCounterLedgerState = async (
   return state;
 };
 
-export const getVotesA = async (
-  providers: CounterProviders,
-  contractAddress: ContractAddress,
-): Promise<bigint | null> => {
-  assertIsContractAddress(contractAddress);
-  logger.info('Checking votes A...');
-  const votes = await providers.publicDataProvider
-    .queryContractState(contractAddress)
-    .then((contractState) => (contractState != null ? contractModule.ledger(contractState.data).votesA : null))
-  logger.info(`Votes A: ${votes}`);
-  return votes;
-};
 
-export const getVotesB = async (
-  providers: CounterProviders,
-  contractAddress: ContractAddress,
-): Promise<bigint | null> => {
-  assertIsContractAddress(contractAddress);
-  logger.info('Checking votes B...');
-  const votes = await providers.publicDataProvider
-    .queryContractState(contractAddress)
-    .then((contractState) => (contractState != null ? contractModule.ledger(contractState.data).votesB : null))
-  logger.info(`Votes B: ${votes}`);
-  return votes;
-};
 
-export const getVotingResults = async (
-  providers: CounterProviders,
-  contractAddress: ContractAddress,
-): Promise<{ votesA: bigint | null; votesB: bigint | null; total: bigint }> => {
-  const votesA = await getVotesA(providers, contractAddress);
-  const votesB = await getVotesB(providers, contractAddress);
-  const total = (votesA || 0n) + (votesB || 0n);
-  
-  logger.info(`Voting results - A: ${votesA}, B: ${votesB}, Total: ${total}`);
-  return { votesA, votesB, total };
-};
 
 export const counterContractInstance: CounterContract = new contractModule.Contract(witnesses);
 
@@ -151,59 +116,6 @@ export const deploy = async (
 
 
 
-
-
-export const get_round = async (counterContract: DeployedCounterContract, providers: CounterProviders): Promise<bigint | null> => {
-  const contractAddress = counterContract.deployTxData.public.contractAddress;
-  return await getCounterLedgerState(providers, contractAddress);
-};
-
-export const vote_for = async (counterContract: DeployedCounterContract, index: number): Promise<FinalizedTxData> => {
-  if (index === 0) {
-    return await voteForOptionA(counterContract);
-  } else if (index === 1) {
-    return await voteForOptionB(counterContract);
-  } else {
-    throw new Error('Invalid vote index. Use 0 for Option A or 1 for Option B');
-  }
-};
-
-export const get_vote_count = async (counterContract: DeployedCounterContract, providers: CounterProviders, index: number): Promise<bigint> => {
-  const contractAddress = counterContract.deployTxData.public.contractAddress;
-  const results = await getVotingResults(providers, contractAddress);
-  
-  if (index === 0) {
-    return results.votesA || 0n;
-  } else if (index === 1) {
-    return results.votesB || 0n;
-  } else {
-    return 0n;
-  }
-};
-
-export const public_key_vote = async (sk: string, instance: string): Promise<string> => {
-  // This function generates a public key hash based on secret key and instance
-  // For now, return a mock implementation that matches the contract behavior
-  logger.info(`Generating public key for voting with secret key and instance`);
-  return `pk_${sk}_${instance}_hash`;
-};
-
-
-export const voteForOptionA = async (counterContract: DeployedCounterContract): Promise<FinalizedTxData> => {
-  logger.info('Voting for Option A...');
-  const finalizedTxData = await (counterContract.callTx as any).vote_for(0n);
-  logger.info(`Vote A transaction ${finalizedTxData.public.txId} added in block ${finalizedTxData.public.blockHeight}`);
-  return finalizedTxData.public;
-};
-
-export const voteForOptionB = async (counterContract: DeployedCounterContract): Promise<FinalizedTxData> => {
-  logger.info('Voting for Option B...');
-  const finalizedTxData = await (counterContract.callTx as any).vote_for(1n);
-  logger.info(`Vote B transaction ${finalizedTxData.public.txId} added in block ${finalizedTxData.public.blockHeight}`);
-  return finalizedTxData.public;
-};
-
-
 export const displayCounterValue = async (
   providers: CounterProviders,
   counterContract: DeployedCounterContract,
@@ -218,21 +130,7 @@ export const displayCounterValue = async (
   return { contractAddress, counterValue };
 };
 
-export const displayVotingResults = async (
-  providers: CounterProviders,
-  counterContract: DeployedCounterContract,
-): Promise<{ votesA: bigint | null; votesB: bigint | null; total: bigint; contractAddress: string }> => {
-  const contractAddress = counterContract.deployTxData.public.contractAddress;
-  const results = await getVotingResults(providers, contractAddress);
-  
-  logger.info(`=== Voting Results ===`);
-  logger.info(`Contract Address: ${contractAddress}`);
-  logger.info(`Option A: ${results.votesA || 0n} votes`);
-  logger.info(`Option B: ${results.votesB || 0n} votes`);
-  logger.info(`Total: ${results.total} votes`);
-  
-  return { ...results, contractAddress };
-};
+
 
 export const createWalletAndMidnightProvider = async (wallet: Wallet): Promise<WalletProvider & MidnightProvider> => {
   const state = await Rx.firstValueFrom(wallet.state());

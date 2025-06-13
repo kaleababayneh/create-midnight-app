@@ -91,7 +91,9 @@ export class DynamicCLIGenerator {
     
     menuItems.forEach((item, index) => {
       const number = index + 1;
-      const readOnlyIndicator = item.isReadOnly ? ' (read-only)' : '';
+      // Only show (read-only) for utility functions like "Display contract state" and "Exit"
+      const isUtilityFunction = item.id === 'display_state' || item.id === 'exit';
+      const readOnlyIndicator = (item.isReadOnly && isUtilityFunction) ? ' (read-only)' : '';
       question += `  ${number}. ${item.label}${readOnlyIndicator}\n`;
     });
     

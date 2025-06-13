@@ -10,6 +10,7 @@
 Create a new Midnight smart contract project in seconds with zero configuration. This scaffold provides everything you need to build, test, and deploy smart contracts on the Midnight blockchain with enhanced data type support and professional tooling.
 
 **🚀 From contract to production in minutes, not hours.**
+# **It feels almost a magic**
 
 ## ✨ What You Get
 

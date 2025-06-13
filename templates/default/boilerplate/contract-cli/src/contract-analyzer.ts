@@ -33,6 +33,7 @@ export interface ContractAnalysis {
 export class ContractAnalyzer {
   private contractPath: string;
   private typesPath: string;
+  private contractAnalysis: ContractAnalysis | null = null;
 
   constructor() {
     // Use relative path to the compiled contract - fix URL decoding
@@ -149,12 +150,17 @@ export class ContractAnalyzer {
         }
       }
       
-      return {
+      const analysis = {
         contractName,
         functions,
         ledgerState,
         witnesses
       };
+      
+      // Store the analysis for later use
+      this.contractAnalysis = analysis;
+      
+      return analysis;
     } catch (error) {
       console.error('Error analyzing contract:', error);
       throw new Error(`Failed to analyze contract: ${error}`);
@@ -167,51 +173,106 @@ export class ContractAnalyzer {
   private parseFunctions(content: string): ContractFunction[] {
     const functions: ContractFunction[] = [];
     
-    // Extract ImpureCircuits type to get the main contract functions
+    // Parse ImpureCircuits (state-modifying functions)
     const impureCircuitsMatch = content.match(/export type ImpureCircuits<T> = \{([^}]+)\}/s);
     if (impureCircuitsMatch) {
       const functionsBlock = impureCircuitsMatch[1];
-      
-      // Parse each function signature - updated regex to handle the actual format
-      const functionRegex = /(\w+)\(context:\s*__compactRuntime\.CircuitContext<T>(?:,\s*([^)]+))?\):\s*__compactRuntime\.CircuitResults<T,\s*([^>]+)>/g;
-      let match;
-      
-      while ((match = functionRegex.exec(functionsBlock)) !== null) {
-        const [, name, paramStr, returnType] = match;
-        
-        const parameters: Array<{name: string, type: string}> = [];
-        
-        // Parse parameters if they exist
-        if (paramStr && paramStr.trim()) {
-          // Handle parameters like "index_0: bigint"
-          const params = paramStr.split(',').map(p => p.trim());
-          params.forEach((param, index) => {
-            const colonIndex = param.indexOf(':');
-            if (colonIndex > 0) {
-              const paramName = param.substring(0, colonIndex).trim();
-              const paramType = param.substring(colonIndex + 1).trim();
-              
-              // Clean up parameter name (remove _0 suffix)
-              const cleanName = paramName.replace(/_\d+$/, '');
-              
-              parameters.push({
-                name: cleanName || `param_${index}`,
-                type: this.mapTypeScriptTypeToUserFriendly(paramType)
-              });
-            }
-          });
-        }
-        
-        functions.push({
-          name,
-          parameters,
-          returnType: this.mapTypeScriptTypeToUserFriendly(returnType.trim()),
-          description: this.generateFunctionDescription(name, parameters)
-        });
-      }
+      this.parseFunctionSignatures(functionsBlock, functions, false);
+    }
+    
+    // Parse PureCircuits (read-only functions)
+    const pureCircuitsMatch = content.match(/export type PureCircuits = \{([^}]+)\}/s);
+    if (pureCircuitsMatch) {
+      const functionsBlock = pureCircuitsMatch[1];
+      this.parsePureFunctionSignatures(functionsBlock, functions);
     }
     
     return functions;
+  }
+
+  /**
+   * Parse impure function signatures (state-modifying functions)
+   */
+  private parseFunctionSignatures(functionsBlock: string, functions: ContractFunction[], isReadOnly: boolean): void {
+    // Parse each function signature - updated regex to handle the actual format
+    const functionRegex = /(\w+)\(context:\s*__compactRuntime\.CircuitContext<T>(?:,\s*([^)]+))?\):\s*__compactRuntime\.CircuitResults<T,\s*([^>]+)>/g;
+    let match;
+    
+    while ((match = functionRegex.exec(functionsBlock)) !== null) {
+      const [, name, paramStr, returnType] = match;
+      
+      const parameters: Array<{name: string, type: string}> = [];
+      
+      // Parse parameters if they exist
+      if (paramStr && paramStr.trim()) {
+        // Handle parameters like "index_0: bigint"
+        const params = paramStr.split(',').map(p => p.trim());
+        params.forEach((param, index) => {
+          const colonIndex = param.indexOf(':');
+          if (colonIndex > 0) {
+            const paramName = param.substring(0, colonIndex).trim();
+            const paramType = param.substring(colonIndex + 1).trim();
+            
+            // Clean up parameter name (remove _0 suffix)
+            const cleanName = paramName.replace(/_\d+$/, '');
+            
+            parameters.push({
+              name: cleanName || `param_${index}`,
+              type: this.mapTypeScriptTypeToUserFriendly(paramType)
+            });
+          }
+        });
+      }
+      
+      functions.push({
+        name,
+        parameters,
+        returnType: this.mapTypeScriptTypeToUserFriendly(returnType.trim()),
+        description: this.generateFunctionDescription(name, parameters)
+      });
+    }
+  }
+
+  /**
+   * Parse pure function signatures (read-only functions)
+   */
+  private parsePureFunctionSignatures(functionsBlock: string, functions: ContractFunction[]): void {
+    // Parse pure functions with simpler signature format: functionName(param: Type): ReturnType;
+    const functionRegex = /(\w+)\(([^)]*)\):\s*([^;]+);/g;
+    let match;
+    
+    while ((match = functionRegex.exec(functionsBlock)) !== null) {
+      const [, name, paramStr, returnType] = match;
+      
+      const parameters: Array<{name: string, type: string}> = [];
+      
+      // Parse parameters if they exist
+      if (paramStr && paramStr.trim()) {
+        const params = paramStr.split(',').map(p => p.trim());
+        params.forEach((param, index) => {
+          const colonIndex = param.indexOf(':');
+          if (colonIndex > 0) {
+            const paramName = param.substring(0, colonIndex).trim();
+            const paramType = param.substring(colonIndex + 1).trim();
+            
+            // Clean up parameter name (remove _0 suffix)
+            const cleanName = paramName.replace(/_\d+$/, '');
+            
+            parameters.push({
+              name: cleanName || `param_${index}`,
+              type: this.mapTypeScriptTypeToUserFriendly(paramType)
+            });
+          }
+        });
+      }
+      
+      functions.push({
+        name,
+        parameters,
+        returnType: this.mapTypeScriptTypeToUserFriendly(returnType.trim()),
+        description: this.generateFunctionDescription(name, parameters)
+      });
+    }
   }
 
   /**
@@ -295,6 +356,24 @@ export class ContractAnalyzer {
    * Check if a function is a read-only function (doesn't modify state)
    */
   isReadOnlyFunction(functionName: string): boolean {
+    if (!this.contractAnalysis) {
+      return false;
+    }
+    
+    // Find the function in our analysis
+    const func = this.contractAnalysis.functions.find((f: ContractFunction) => f.name === functionName);
+    if (!func) {
+      return false;
+    }
+    
+    // A function is read-only if:
+    // 1. It has a non-void return type (not empty [] or void)
+    // 2. It matches common naming patterns for read-only functions
+    const hasReturnValue = func.returnType && 
+                          func.returnType !== '[]' && 
+                          func.returnType !== 'void' && 
+                          func.returnType.trim() !== '';
+    
     // Identify read-only functions based on common naming patterns
     const readOnlyPatterns = [
       /^get_/,           // get_something
@@ -308,7 +387,10 @@ export class ContractAnalyzer {
       /^retrieve_/       // retrieve_something
     ];
     
-    return readOnlyPatterns.some(pattern => pattern.test(functionName));
+    const matchesReadOnlyPattern = readOnlyPatterns.some(pattern => pattern.test(functionName));
+    
+    // A function is read-only if it has a return value OR matches naming patterns
+    return hasReturnValue || matchesReadOnlyPattern;
   }
 
   /**

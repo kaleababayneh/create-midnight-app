@@ -112,7 +112,7 @@ export class SimpleEnhancedCLI {
         return this.contract;
       } else {
         this.logger.info('🚀 Auto-deploying new contract...');
-        this.contract = await api.deploy(providers, { privateCounter: 0 });
+        this.contract = await api.deploy(providers, { secretKey: new Uint8Array(32).fill(1) });
         this.logger.info(`🎉 Successfully deployed ${this.contractInfo.contractName}!`);
         return this.contract;
       }
@@ -129,7 +129,7 @@ Which would you like to do? `;
       const choice = await rli.question(question);
       switch (choice) {
         case '1':
-          this.contract = await api.deploy(providers, { privateCounter: 0 });
+          this.contract = await api.deploy(providers, { secretKey: new Uint8Array(32).fill(1) });
           this.logger.info(`🎉 Successfully deployed ${this.contractInfo.contractName}!`);
           return this.contract;
         case '2':
