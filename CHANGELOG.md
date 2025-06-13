@@ -5,6 +5,21 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.1.6] - 2025-06-14
+
+### 🔧 State Display Fixes
+
+#### ✨ Fixed
+- **Contract State Display**: Fixed "Not available" issue in contract state display
+- **Dynamic State Reading**: Now properly reads all ledger state variables (round, votesA, votesB, items)
+- **Ledger Integration**: Improved integration with contract ledger state queries
+- **Set Handling**: Enhanced handling of Set<data> types in contract state
+
+#### 🎯 Improved
+- **Real-time Values**: Contract state now shows actual current values instead of placeholders
+- **Error Handling**: Better error handling for state queries
+- **Type Support**: Enhanced support for bigint and complex types in state display
+
 ## [2.1.4] - 2025-06-14
 
 ### 🚀 Final Production Release

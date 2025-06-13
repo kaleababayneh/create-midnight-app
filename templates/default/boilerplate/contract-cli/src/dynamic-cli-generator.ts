@@ -151,34 +151,70 @@ export class DynamicCLIGenerator {
       this.logger.info('=== Contract State ===');
       this.logger.info(`Contract Address: ${contract.deployTxData.public.contractAddress}`);
 
-      // Display ledger state
-      for (const [stateName, stateType] of Object.entries(this.contractAnalysis.ledgerState)) {
-        try {
-          let value: any;
-          
-          switch (stateName) {
-            case 'items':
-              // Handle Set<Bytes<32>> - get the set contents
+      // Get the full ledger state
+      try {
+        const contractState = await providers.publicDataProvider.queryContractState(contract.deployTxData.public.contractAddress);
+        if (contractState) {
+          // Import contract module to get ledger function
+          const { contracts } = await import('@midnight-ntwrk/contract');
+          const contractNames = Object.keys(contracts);
+          if (contractNames.length > 0) {
+            const contractModule = contracts[contractNames[0]];
+            const ledgerState = contractModule.ledger(contractState.data);
+            
+            // Display each ledger state variable
+            for (const [stateName, stateType] of Object.entries(this.contractAnalysis.ledgerState)) {
               try {
-                const itemsArray = await api.getItemsSet(providers, contract.deployTxData.public.contractAddress);
-                if (itemsArray.length > 0) {
-                  value = `Set with ${itemsArray.length} item(s): [${itemsArray.join(', ')}]`;
+                let value: any;
+                
+                if (stateName === 'items' && typeof ledgerState[stateName] === 'object') {
+                  // Handle Set<data> - check for size and isEmpty methods
+                  const itemsSet = ledgerState[stateName];
+                  if (typeof itemsSet.size === 'function' && typeof itemsSet.isEmpty === 'function') {
+                    const size = itemsSet.size();
+                    const isEmpty = itemsSet.isEmpty();
+                    if (isEmpty) {
+                      value = 'Empty set';
+                    } else {
+                      this.logger.info('Checking items set...');
+                      // Try to iterate through items
+                      const items: string[] = [];
+                      try {
+                        for (const item of itemsSet) {
+                          items.push(Array.from(item).join(','));
+                          if (items.length >= 10) break; // Limit to 10 items for display
+                        }
+                        value = `Set with ${size} item(s)${items.length > 0 ? ': [' + items.join(', ') + ']' : ''}`;
+                      } catch {
+                        value = `Set with ${size} item(s)`;
+                      }
+                      this.logger.info(`Found ${size} items in set`);
+                    }
+                  } else {
+                    value = 'Set<data>';
+                  }
                 } else {
-                  value = 'Empty set';
+                  // Handle regular state variables
+                  value = ledgerState[stateName];
+                  if (typeof value === 'bigint') {
+                    value = value.toString();
+                  }
                 }
-              } catch (setError) {
-                this.logger.debug(`Set extraction error: ${setError}`);
-                value = 'Set contents not accessible';
+                
+                this.logger.info(`${stateName} (${stateType}): ${value}`);
+              } catch (error) {
+                this.logger.warn(`Could not fetch ${stateName}: ${error}`);
+                this.logger.info(`${stateName} (${stateType}): Error reading value`);
               }
-              break;
-            default:
-              value = 'Not available';
+            }
+          } else {
+            this.logger.error('No contract module found');
           }
-          
-          this.logger.info(`${stateName} (${stateType}): ${value}`);
-        } catch (error) {
-          this.logger.warn(`Could not fetch ${stateName}: ${error}`);
+        } else {
+          this.logger.error('Could not query contract state');
         }
+      } catch (error) {
+        this.logger.error(`Failed to fetch contract state: ${error}`);
       }
     };
   }

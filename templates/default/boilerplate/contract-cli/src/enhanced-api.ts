@@ -1,5 +1,5 @@
 // Enhanced API wrapper for Counter Contract
-// Generated on: 2025-06-13T20:26:30.666Z
+// Generated on: 2025-06-13T22:15:31.852Z
 // Auto-generated from counter.compact
 
 import { type Logger } from 'pino';
@@ -93,16 +93,22 @@ export class EnhancedContractAPI {
     return await (originalApi as any).increment(...args);
   }
   /**
-   * Execute decrement function
+   * Execute vote_for function
    */
-  async decrement(...args: any[]): Promise<any> {
-    return await (originalApi as any).decrement(...args);
+  async vote_for(...args: any[]): Promise<any> {
+    return await (originalApi as any).vote_for(...args);
   }
   /**
-   * Execute publicKey function
+   * Execute get_vote_count function
    */
-  async publicKey(...args: any[]): Promise<any> {
-    return await (originalApi as any).publicKey(...args);
+  async get_vote_count(...args: any[]): Promise<any> {
+    return await (originalApi as any).get_vote_count(...args);
+  }
+  /**
+   * Execute public_key_vote function
+   */
+  async public_key_vote(...args: any[]): Promise<any> {
+    return await (originalApi as any).public_key_vote(...args);
   }
 }
 
@@ -110,7 +116,7 @@ export class EnhancedContractAPI {
 export const CONTRACT_METADATA = {
   name: 'Counter Contract',
   fileName: 'counter.compact',
-  generatedAt: '2025-06-13T20:26:30.666Z',
+  generatedAt: '2025-06-13T22:15:31.852Z',
   functions: [
   {
     "name": "increment",
@@ -119,22 +125,41 @@ export const CONTRACT_METADATA = {
     "readOnly": false
   },
   {
-    "name": "decrement",
+    "name": "vote_for",
     "parameters": [
       {
-        "name": "sk",
-        "type": "Bytes<32>"
+        "name": "secret_key",
+        "type": "Bytes<3>"
+      },
+      {
+        "name": "index",
+        "type": "Uint<8>"
       }
     ],
     "returnType": "[]",
     "readOnly": false
   },
   {
-    "name": "publicKey",
+    "name": "get_vote_count",
+    "parameters": [
+      {
+        "name": "index",
+        "type": "Uint<8>"
+      }
+    ],
+    "returnType": "Uint<64>",
+    "readOnly": true
+  },
+  {
+    "name": "public_key_vote",
     "parameters": [
       {
         "name": "sk",
-        "type": "Bytes<32>"
+        "type": "Bytes<3>"
+      },
+      {
+        "name": "instance",
+        "type": "Bytes<3>"
       }
     ],
     "returnType": "Bytes<32>",
@@ -143,16 +168,20 @@ export const CONTRACT_METADATA = {
 ],
   ledgerState: [
   {
-    "name": "organizer",
-    "type": "Bytes<32>"
-  },
-  {
-    "name": "restrictedCounter",
-    "type": "Counter"
-  },
-  {
     "name": "round",
     "type": "Counter"
+  },
+  {
+    "name": "votesA",
+    "type": "Counter"
+  },
+  {
+    "name": "votesB",
+    "type": "Counter"
+  },
+  {
+    "name": "items",
+    "type": "Set<Bytes<32>>"
   }
 ],
   witnesses: []
