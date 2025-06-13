@@ -76,12 +76,15 @@ This single command:
 
 **🚀 Deploy & Test:**
 
+
 ```bash
-# For local development (recommended)
-npm run deploy
 
 # For testnet deployment
 npm run wallet
+
+# For testnet wallet generation
+npm run deploy
+
 ```
 
 ## 📋 Available Commands
@@ -89,20 +92,22 @@ npm run wallet
 | Command | Description | Environment |
 |---------|-------------|-------------|
 | `npm run dev` | 🔄 Main development command - syncs, compiles, generates CLI | Local |
-| `npm run deploy` | 🚀 Deploy to local Midnight node with Docker integration | Local |
-| `npm run wallet` | 🌐 Launch testnet CLI with wallet integration | Testnet |
-| `npm run balance` | 💰 Check current wallet balance | Testnet |
-| `npm run faucet` | 🚰 Request testnet tokens automatically | Testnet |
+| `npm run deploy` | 🚀 Deploy to  Midnight testnet | Testnet |
+| `npm run wallet` | 🌐 generate a new key-pair wallet on Midnight | Testnet |
+| `npm run balance` | 💰 Check current testnet wallet balance | Testnet |
+| `npm run faucet` | 🚰 Request testnet tokens  | Testnet |
 | `npm run check` | ✅ Verify scaffold is ready and show status | Local |
 | `npm run build` | 🔨 Build all workspaces | Local |
-| `npm run clean` | 🧹 Clean all generated files | Local |
+| `npm run deploy:new` | 🔨  Deploy to  Midnight testnet(default) | Testnet |
+| `npm run deploy:join"` | 🔨 Auto-join existing contract | Testnet |
+
+
+deploy:new
 
 ### 🔧 Deployment Flags
 
 | Flag | Behavior | Use Case |
 |------|----------|----------|
-| `--new` | Auto-deploy new contract | CI/CD pipelines |
-| `--join` | Auto-join existing contract | Team collaboration |
 | `--dry-run` | Preview commands only | Testing scripts |
 | `--help` | Show detailed help | Documentation |
 
@@ -110,7 +115,7 @@ npm run wallet
 
 1. **Create Contract** - Write your `.compact` file in the project root
 2. **Auto-Generate** - Run `npm run dev` to generate everything automatically
-3. **Deploy & Test** - Use `npm run deploy` for local testing or `npm run wallet` for testnet
+3. **Deploy & Test** - Use `npm run deploy` for testnet deployment or `npm run wallet` for wallet generation
 4. **Iterate** - Edit contract, run `npm run dev`, repeat
 
 ### 🔄 How the Auto-Generation Works
@@ -131,7 +136,7 @@ npm run wallet
 - **Witness Function Support**: Automatically detects and includes private state functions
 
 ### 🌐 **Complete Deployment Pipeline**
-- **One-Command Local Deployment**: `npm run deploy` for full local development setup
+- **One-Command Testnet Deployment**: `npm run deploy` for full testnet development setup
 - **Docker Integration**: Automatically manages local Midnight node containers
 - **Testnet Deployment**: Seamless testnet integration with automated wallet management
 - **Dry Run Support**: Preview deployment with `--dry-run` flag
