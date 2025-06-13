@@ -37,8 +37,8 @@ npm run wallet
 ## Support
 
 - 📖 [Documentation](./README.md)
-- 🐛 [Issues](https://github.com/your-username/create-midnight-app/issues)
-- 💬 [Discussions](https://github.com/your-username/create-midnight-app/discussions)
+- 🐛 [Issues](https://github.com/kaleababayneh/create-midnight-app/issues)
+- 💬 [Discussions](https://github.com/kaleababayneh/create-midnight-app/discussions)
 
 ## License
 

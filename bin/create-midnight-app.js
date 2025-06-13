@@ -37,7 +37,7 @@ After creating your project:
   3. Run 'npm run deploy' to deploy to testnet
   4. Run 'npm run wallet' to generate a new wallet
 
-Documentation: https://github.com/your-username/create-midnight-app
+Documentation: https://github.com/kaleababayneh/create-midnight-app
 `)
   .action(async (projectName, options) => {
     try {
