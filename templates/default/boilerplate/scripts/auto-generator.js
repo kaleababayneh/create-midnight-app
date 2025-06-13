@@ -445,18 +445,7 @@ export const CONTRACT_METADATA = {
     // Update core API file
     await this.updateCoreAPI(contractInfo);
 
-    // Optionally, update CLI docs to include witnesses
-    const docPath = path.join(this.config.cliSourceDir, '..', 'DYNAMIC_CLI_GUIDE.md');
-    let docContent = '';
-    if (fs.existsSync(docPath)) {
-      docContent = await fs.promises.readFile(docPath, 'utf-8');
-    }
-    // Add witness section if not present
-    if (!docContent.includes('## Witness Functions')) {
-      docContent += '\n\n## Witness Functions\n';
-    }
-    docContent = docContent.replace(/## Witness Functions[\s\S]*?(?=\n## |$)/, `## Witness Functions\n\n${contractInfo.witnesses.map(w => `- **${w.name}**: WitnessContext<${w.ledgerType}, ${w.privateType}> → [${w.returns.join(', ')}]`).join('\n')}`);
-    await fs.promises.writeFile(docPath, docContent, 'utf-8');
+   
     console.log('✅ CLI files generated (including witnesses)');
   }
 
