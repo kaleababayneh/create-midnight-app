@@ -1,0 +1,35 @@
+# Development files
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Testing
+test/
+coverage/
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Don't include test projects
+test-*/
+
+# Exclude log files and database files from templates
+templates/**/logs/
+templates/**/midnight-level-db/
+templates/**/*.log
+
+# Exclude dist files from templates (will be regenerated)
+templates/**/dist/
+
+# Validation script
+validate.js
+
+# Development only
+*.md.backup
+.gitignore
