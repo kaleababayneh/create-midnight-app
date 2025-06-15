@@ -2,15 +2,20 @@
 
 [![Midnight Network](https://img.shields.io/badge/Midnight-Network-blue)](https://midnight.network)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.8-blue)](https://typescriptlang.org)
-[![Node.js](https://img.shields.io/badge/Node.js-18+-green)](https://nodejs.org)
+[![Node.js](https://img.shields.io/badge/Node.js-20-green)](https://nodejs.org)
 [![NPM](https://img.shields.io/badge/NPM-2.0.0-red)](https://npmjs.com/package/create-midnight-app)
 
 **The fastest way to build Midnight smart contracts with automated CLI generation.**
 
-Create a new Midnight smart contract project in seconds with zero configuration. This scaffold provides everything you need to build, test, and deploy smart contracts on the Midnight blockchain with enhanced data type support and professional tooling.
+Create a new Midnight smart contract project in seconds with zero configuration. This scaffold provides everything you need to build, test, and deploy smart contracts on the Midnight blockchain with enhanced data type support and professional tooling. The scaffold comes with pre-generated wallet.
 
 **🚀 From contract to production in minutes, not hours.**
-# **It feels almost a magic**
+
+## ✨ Developer Quote
+
+> **"It feels almost like magic :)"**  
+> — *Midnight developers on* `create-midnight-app`
+
 
 ## ✨ What You Get
 
@@ -23,15 +28,14 @@ Create a new Midnight smart contract project in seconds with zero configuration.
 - 🎯 **Enhanced Data Type Support** - Full support for all Midnight contract types including complex parameters
 - 🛠️ **Professional Tooling** with error handling, validation, dry-run support, and clear feedback
 - 🔍 **Witness Function Support** - Automatically detects and includes private state functions
-- 🐳 **Docker Integration** - Automated local Midnight node management for testing
 
 ## 🚀 Quick Start
 
 **Get started with Midnight development in under 2 minutes:**
-
+make sure you are using the latest version
 ```bash
 # Create a new project
-npx create-midnight-app my-contract
+npx create-midnight-app@latest my-contract
 
 # Navigate to project
 cd my-contract
@@ -41,7 +45,13 @@ mv .env.example .env
 
 # Create your smart contract
 touch voting.compact
+
+# deploy to testnet & start interacting
+npm run deploy
+
+✅ That is ALL!
 ```
+> ⚠️ **Make sure you are using Node 20** — *this is important!*
 
 **📝 Write Your First Contract:**
 
@@ -61,11 +71,11 @@ export circuit get_votes(): Uint<64> {
 }
 ```
 
-**🎯 Generate Everything Automatically:**
+**🎯 Deploy in an instant**
 
 ```bash
-# Auto-generate CLI and compile contract
-npm run dev
+# Auto-generate CLI, compile & deploy contract and start interacting
+npm run deploy
 ```
 
 This single command:
@@ -79,13 +89,15 @@ This single command:
 
 
 ```bash
+# For testnet wallet generation
+npm run wallet - # the generated wallet will automatically be saved into .env
+
+
+# For requesting token from faucet
+npm run faucet
 
 # For testnet deployment
-npm run wallet
-
-# For testnet wallet generation
 npm run deploy
-
 ```
 
 ## 📋 Available Commands
@@ -100,10 +112,9 @@ npm run deploy
 | `npm run check` | ✅ Verify scaffold is ready and show status | Local |
 | `npm run build` | 🔨 Build all workspaces | Local |
 | `npm run deploy:new` | 🔨  Deploy to  Midnight testnet(default) | Testnet |
-| `npm run deploy:join"` | 🔨 Auto-join existing contract | Testnet |
+| `npm run deploy:join` | 🔨 Auto-join existing contract | Testnet |
+| `npm run docs` | 🌐 Open the official Compact documentation |
 
-
-deploy:new
 
 ### 🔧 Deployment Flags
 
@@ -116,8 +127,8 @@ deploy:new
 
 1. **Create Contract** - Write your `.compact` file in the project root
 2. **Auto-Generate** - Run `npm run dev` to generate everything automatically
-3. **Deploy & Test** - Use `npm run deploy` for testnet deployment or `npm run wallet` for wallet generation
-4. **Iterate** - Edit contract, run `npm run dev`, repeat
+3. **Deploy & Test** - Use `npm run deploy` for testnet deployment & `npm run wallet` a new wallet generation
+4. **Iterate** - Edit contract, run `npm run dev/deploy`, repeat
 
 ### 🔄 How the Auto-Generation Works
 
@@ -234,21 +245,6 @@ export circuit get_results(): [Uint<64>, Uint<64>] {
 }
 ```
 
-### 📋 Bulletin Board with Complex Types
-```compact
-pragma language_version 0.15;
-import CompactStandardLibrary;
-
-export ledger messages: BulletinBoard;
-
-export circuit post(author: Opaque<"string">, content: Opaque<"string">): [] {
-  messages.post(author, content);
-}
-
-export circuit get_messages(): MessageList {
-  return messages.getAll();
-}
-```
 
 ## 🏗️ How It Works
 
@@ -285,8 +281,8 @@ export circuit get_count(): Uint<64> { ... }
 ## 🛠️ Requirements
 
 **System Requirements:**
-- **Node.js 18+** (20+ recommended)
-- **NPM** or **Yarn**
+- **Node.js 20** (It must be 20!)
+- **NPM** 
 - **Midnight Development Tools** - Install `compactc` compiler
 - **Docker Desktop** (for local development)
 
@@ -307,8 +303,6 @@ node --version && docker --version && git --version
 | Issue | Symptoms | Solution |
 |-------|----------|----------|
 | **Contract not detected** | "No .compact files found" | Ensure `.compact` file is in project root |
-| **Compilation errors** | Build fails, ZK key generation errors | Check `pragma language_version` directive |
-| **CLI generation failed** | Missing menu options | Verify `export circuit` function syntax |
 | **Docker issues** | Local deployment fails | Ensure Docker Desktop is running |
 | **Testnet connection** | Wallet sync timeouts | Check internet connection, try `npm run balance` |
 | **Zero balance** | Deployment fails with "insufficient funds" | Run `npm run faucet` or use manual faucet |
@@ -411,10 +405,12 @@ We welcome contributions! Here's how to get started:
 | 🔄 Multi-Contract Support | Planned | Support multiple contracts per project |
 | 🔄 GUI Interface | Planned | Web-based contract interaction |
 | 🔄 Contract Templates | Planned | Pre-built contract examples |
+| 🔄 Midnight Playground | Planned | Online midnight experimenting tool |
+
 
 ## 📄 License
 
-MIT License - feel free to use this for any project!
+Apache 2.0 License 
 
 ## 🌟 Why Use Create Midnight App?
 
@@ -425,10 +421,9 @@ This scaffold eliminates all the friction from Midnight smart contract developme
 
 ---
 
-**Last Updated**: June 13, 2025  
-**Version**: 2.0.0  
+**Last Updated**: June 15, 2025  
+**Version**: 2.1.7  
 Built with ❤️ for the Midnight ecosystem 🌙
 
 **Happy coding on Midnight! 🌙✨**
 
-Empowering developers to build privacy-preserving applications with zero-knowledge proofs and enhanced data type support.

@@ -1,7 +1,7 @@
 # 🌙 Create Midnight App
 
 [![npm version](https://badge.fury.io/js/create-midnight-app.svg)](https://badge.fury.io/js/create-midnight-app)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
 Create Midnight smart contract projects with zero configuration. Get started building on the Midnight blockchain in seconds!
 
@@ -42,4 +42,4 @@ npm run wallet
 
 ## License
 
-MIT
+Apache 2.0

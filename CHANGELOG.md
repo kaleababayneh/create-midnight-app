@@ -5,13 +5,25 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.1.7] - 2025-06-15
+
+### 📚 Documentation Access
+
+#### ✨ Added
+- **Documentation Script**: Added `npm run docs` command to quickly open Midnight Compact documentation
+- **Quick Reference**: Easy access to https://docs.midnight.network/develop/reference/compact/ from any project
+
+#### 💡 Usage
+```bash
+npm run docs  # Opens Midnight Compact documentation in your default browser
+```
+
 ## [2.1.6] - 2025-06-14
 
 ### 🔧 State Display Fixes
 
 #### ✨ Fixed
 - **Contract State Display**: Fixed "Not available" issue in contract state display
-- **Dynamic State Reading**: Now properly reads all ledger state variables (round, votesA, votesB, items)
 - **Ledger Integration**: Improved integration with contract ledger state queries
 - **Set Handling**: Enhanced handling of Set<data> types in contract state
 

@@ -20,6 +20,7 @@
     "deploy": "node boilerplate/scripts/deploy.js --new",
     "deploy:new": "node boilerplate/scripts/deploy.js --new",
     "deploy:join": "node boilerplate/scripts/deploy.js --join",
+    "docs": "open https://docs.midnight.network/develop/reference/compact/",
     "check": "node -e \"console.log('✅ Scaffold-midnight is ready!'); console.log('💡 Create a .compact file and run: npm run dev'); process.exit(0)\""
   },
   "devDependencies": {
